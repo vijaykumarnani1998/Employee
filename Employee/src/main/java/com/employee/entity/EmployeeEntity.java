@@ -30,7 +30,6 @@ public class EmployeeEntity {
 	private String email;
 	
 	@Column(name = "mobile_number")
-	@Transient
 	private String mobileNumber;
 	
 }

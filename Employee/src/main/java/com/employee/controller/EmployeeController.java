@@ -19,31 +19,29 @@ import com.employee.service.EmployeeService;
 @RequestMapping("/employee")
 public class EmployeeController {
 
-   @Autowired
-	private  EmployeeService employeeService;
-	
+    @Autowired
+	private EmployeeService employeeService;
+
 	@PostMapping("/employee")
-	public EmployeeEntity createEmployee( @RequestBody EmployeeEntity employee) {
+	public EmployeeEntity createEmployee(@RequestBody EmployeeEntity employee) {
 		return this.employeeService.saveEmployee(employee);
 	}
 
 	@GetMapping("/employee/all")
-	public List<EmployeeEntity> getAllEmployees()
-	{
+	public List<EmployeeEntity> getAllEmployees() {
 		return employeeService.getAllEmployees();
 	}
-	
+
 	@DeleteMapping("/employee/{id}")
-	public List<EmployeeEntity> deleteEmployeeById(@PathVariable Integer id)
-	{
+	public List<EmployeeEntity> deleteEmployeeById(@PathVariable Integer id) {
 		employeeService.deleteEmployeeById(id);
 		return employeeService.getAllEmployees();
 	}
-	
+
 	@PutMapping("/update")
-	public EmployeeEntity  updateEmployee( @RequestBody EmployeeEntity employeeEntity) {
-		
-    return employeeService.updateEmployee(employeeEntity);
+	public EmployeeEntity updateEmployee(@RequestBody EmployeeEntity employeeEntity) {
+
+		return employeeService.updateEmployee(employeeEntity);
 }
 	
 	

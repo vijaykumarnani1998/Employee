@@ -38,14 +38,32 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Override
 	public List<EmployeeEntity> deleteEmployeeById(Integer id) {
+		
+		 Optional<EmployeeEntity> optEmployee = employeeRepository.findById(id);
+		 if(optEmployee.isPresent())
+		 {
 		employeeRepository.deleteById(id); 
 		return getAllEmployees() ;
+		 }
+		 else
+		 {
+			 return null;
+		 }
+		
 	}
 
 	@Override
 	public EmployeeEntity updateEmployee(EmployeeEntity employee) {
-		
+		Integer id = employee.getId();
+		 Optional<EmployeeEntity> optEmployee = employeeRepository.findById(id);
+		 if(optEmployee.isPresent())
+		 {
 		return employeeRepository.save(employee);
+		 }
+		 else
+		 {
+			 return null;
+		 }
 	}
 
 }
