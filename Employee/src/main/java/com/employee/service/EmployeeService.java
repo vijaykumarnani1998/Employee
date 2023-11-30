@@ -7,14 +7,14 @@ import com.employee.entity.EmployeeEntity;
 
 public interface EmployeeService {
 	
-	public EmployeeEntity saveEmployee(EmployeeDto dto);
+	public EmployeeDto saveEmployee(EmployeeDto dto);
 	
-	public List<EmployeeEntity> getAllEmployees();
+	public List<EmployeeDto> getAllEmployees();
 	
-	public EmployeeEntity getOneEmployeeById(Integer id);
+	public EmployeeDto getOneEmployeeById(Integer id);
 	
-	public List<EmployeeEntity> deleteEmployeeById(Integer id);
+	public List<EmployeeDto> deleteEmployeeById(Integer id);
 	
-	public EmployeeEntity updateEmployee(EmployeeDto dto);
+	public EmployeeDto updateEmployee(EmployeeDto dto);
 
 }

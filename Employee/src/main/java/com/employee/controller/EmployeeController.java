@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.employee.dto.EmployeeDto;
-import com.employee.entity.EmployeeEntity;
 import com.employee.exception.EmployeeNotFoundException;
 import com.employee.service.EmployeeService;
 
@@ -27,31 +26,32 @@ public class EmployeeController {
 	private  EmployeeService employeeService;
 	
 	@PostMapping("/employee")
-	public ResponseEntity<EmployeeEntity> createEmployee( @RequestBody EmployeeDto employee)
+	public ResponseEntity<EmployeeDto> createEmployee( @RequestBody EmployeeDto employee)
     {
-		EmployeeEntity employee1 = employeeService.saveEmployee(employee);
-		return new ResponseEntity<EmployeeEntity>(employee1 ,HttpStatus.ACCEPTED);
+		EmployeeDto employee1 = employeeService.saveEmployee(employee);
+		return new ResponseEntity<EmployeeDto>(employee1 ,HttpStatus.ACCEPTED);
 
 		
 	}
 
 	@GetMapping("/employee/all")
-	public ResponseEntity<List<EmployeeEntity>> getAllEmployees()
+	public ResponseEntity<List<EmployeeDto>> getAllEmployees()
 	{
 		
-		List<EmployeeEntity> list = employeeService.getAllEmployees();
-		return new ResponseEntity<List<EmployeeEntity>>(list ,HttpStatus.ACCEPTED);
+		List<EmployeeDto> list = employeeService.getAllEmployees();
+		return new ResponseEntity<List<EmployeeDto>>(list ,HttpStatus.ACCEPTED);
 	}
 	@GetMapping("/employee/{id}")
 	public ResponseEntity<?>  getOneEmployee(@PathVariable Integer id)
 	{
 		
 		try {
-			 EmployeeEntity employee = employeeService.getOneEmployeeById(id);
-			return new ResponseEntity<EmployeeEntity>(employee ,HttpStatus.ACCEPTED);
+			 EmployeeDto employee = employeeService.getOneEmployeeById(id);
+			return new ResponseEntity<EmployeeDto>(employee ,HttpStatus.ACCEPTED);
 
 		} catch (EmployeeNotFoundException e) {
-			return new ResponseEntity<String>( e.getMessage(),HttpStatus.BAD_REQUEST);
+			//return new ResponseEntity<String>( e.getMessage(),HttpStatus.BAD_REQUEST);
+			throw e;
 		}
 	}
 	
@@ -61,12 +61,13 @@ public class EmployeeController {
 		
 		try {
 			employeeService.deleteEmployeeById(id);
-			List<EmployeeEntity> list = employeeService.getAllEmployees();
-			return new ResponseEntity<List<EmployeeEntity>>(list ,HttpStatus.ACCEPTED);
+			List<EmployeeDto> list = employeeService.getAllEmployees();
+			return new ResponseEntity<List<EmployeeDto>>(list ,HttpStatus.ACCEPTED);
 		} catch (EmployeeNotFoundException e) {
 			
-			return new ResponseEntity<String>( e.getMessage(),HttpStatus.BAD_REQUEST);
+			//return new ResponseEntity<String>( e.getMessage(),HttpStatus.BAD_REQUEST);
 			//If we use Global Exception Handler,then we can use "throw e" instead of above line
+			throw e;
 		}
 	}
 	
@@ -74,11 +75,12 @@ public class EmployeeController {
 	public ResponseEntity<?>   updateEmployee( @RequestBody EmployeeDto employee) {
 		
 		try {
-			EmployeeEntity employee1 = employeeService.updateEmployee(employee);
-			return new ResponseEntity<EmployeeEntity>(employee1 ,HttpStatus.ACCEPTED);
+			EmployeeDto employee1 = employeeService.updateEmployee(employee);
+			return new ResponseEntity<EmployeeDto>(employee1 ,HttpStatus.ACCEPTED);
 		} catch (EmployeeNotFoundException e) {
-			e.printStackTrace();
-			return new ResponseEntity<String>( e.getMessage(),HttpStatus.BAD_REQUEST);
+			
+			//return new ResponseEntity<String>( e.getMessage(),HttpStatus.BAD_REQUEST);
+			throw e;
 			
 		}
 }
