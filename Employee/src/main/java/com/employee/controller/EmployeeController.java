@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.employee.dto.EmployeeDto;
 import com.employee.entity.EmployeeEntity;
 import com.employee.exception.EmployeeNotFoundException;
 import com.employee.service.EmployeeService;
@@ -26,7 +27,7 @@ public class EmployeeController {
 	private  EmployeeService employeeService;
 	
 	@PostMapping("/employee")
-	public ResponseEntity<EmployeeEntity> createEmployee( @RequestBody EmployeeEntity employee)
+	public ResponseEntity<EmployeeEntity> createEmployee( @RequestBody EmployeeDto employee)
     {
 		EmployeeEntity employee1 = employeeService.saveEmployee(employee);
 		return new ResponseEntity<EmployeeEntity>(employee1 ,HttpStatus.ACCEPTED);
@@ -70,10 +71,16 @@ public class EmployeeController {
 	}
 	
 	@PutMapping("/update")
-	public ResponseEntity<EmployeeEntity>   updateEmployee( @RequestBody EmployeeEntity employee) {
+	public ResponseEntity<?>   updateEmployee( @RequestBody EmployeeDto employee) {
 		
-		EmployeeEntity employee1 = employeeService.saveEmployee(employee);
-		return new ResponseEntity<EmployeeEntity>(employee1 ,HttpStatus.ACCEPTED);
+		try {
+			EmployeeEntity employee1 = employeeService.updateEmployee(employee);
+			return new ResponseEntity<EmployeeEntity>(employee1 ,HttpStatus.ACCEPTED);
+		} catch (EmployeeNotFoundException e) {
+			e.printStackTrace();
+			return new ResponseEntity<String>( e.getMessage(),HttpStatus.BAD_REQUEST);
+			
+		}
 }
 	
 	

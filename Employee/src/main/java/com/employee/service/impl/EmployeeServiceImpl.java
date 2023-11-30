@@ -3,9 +3,11 @@ package com.employee.service.impl;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.employee.dto.EmployeeDto;
 import com.employee.entity.EmployeeEntity;
 import com.employee.exception.EmployeeNotFoundException;
 import com.employee.repository.EmployeeRepository;
@@ -18,9 +20,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 	private EmployeeRepository employeeRepository;
 
 	@Override
-	public EmployeeEntity saveEmployee(EmployeeEntity employee) {
-	
-		return employeeRepository.save(employee);
+	public EmployeeEntity saveEmployee(EmployeeDto dto) {
+
+		EmployeeEntity entity= new EmployeeEntity();
+		BeanUtils.copyProperties(dto, entity);
+		return employeeRepository.save(entity);
 	}
 
 	@Override
@@ -47,13 +51,17 @@ public class EmployeeServiceImpl implements EmployeeService {
 	}
 
 	@Override
-	public EmployeeEntity updateEmployee(EmployeeEntity employee) {
+	public EmployeeEntity updateEmployee(EmployeeDto dto) {
 		
-		Integer id = employee.getId();
+		Integer id = dto.getId();
 		 EmployeeEntity employeeEntity = employeeRepository.findById(id).orElseThrow(()->new EmployeeNotFoundException("Employee Not Exists"));
+		 
 		 return employeeRepository.save(employeeEntity);
 		
-		
-	}
+		}
+
+	
+
+	
 
 }

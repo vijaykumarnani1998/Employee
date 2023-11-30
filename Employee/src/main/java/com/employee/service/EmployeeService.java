@@ -2,11 +2,12 @@ package com.employee.service;
 
 import java.util.List;
 
+import com.employee.dto.EmployeeDto;
 import com.employee.entity.EmployeeEntity;
 
 public interface EmployeeService {
 	
-	public EmployeeEntity saveEmployee(EmployeeEntity employee);
+	public EmployeeEntity saveEmployee(EmployeeDto dto);
 	
 	public List<EmployeeEntity> getAllEmployees();
 	
@@ -14,6 +15,6 @@ public interface EmployeeService {
 	
 	public List<EmployeeEntity> deleteEmployeeById(Integer id);
 	
-	public EmployeeEntity updateEmployee(EmployeeEntity employee);
+	public EmployeeEntity updateEmployee(EmployeeDto dto);
 
 }
