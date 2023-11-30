@@ -1,8 +1,10 @@
 package com.employee.service.impl;
 
 import java.util.ArrayList;
-import java.util.List;import java.util.stream.Collectors;
+import java.util.List;
+import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,15 +21,18 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Autowired
 	private EmployeeRepository employeeRepository;
 
+	//To work with ModelMapper first add ModelMapper Dependency and Create a Bean and Inject here
+	@Autowired
+	private ModelMapper mapper;
+	
 	@Override
 	public EmployeeDto saveEmployee(EmployeeDto dto) {
 
-		EmployeeEntity entity= new EmployeeEntity();
-		BeanUtils.copyProperties(dto, entity);
+		
+		EmployeeEntity entity = mapper.map(dto, EmployeeEntity.class);
 		EmployeeEntity savedEntity = employeeRepository.save(entity);
-	
-		 BeanUtils.copyProperties(savedEntity, dto);
-		 return dto;
+		EmployeeDto employeeDto = mapper.map(savedEntity,EmployeeDto.class);
+	    return employeeDto;
 	}
 
 	@Override
@@ -37,19 +42,17 @@ public class EmployeeServiceImpl implements EmployeeService {
 		
 		 List<EmployeeDto> dtoList= new ArrayList<>();
 		 entitylist.stream().forEach(entity->{
-			                                 EmployeeDto dto = new EmployeeDto();
-		                                     BeanUtils.copyProperties(entity, dto); 
-		                                     dtoList.add(dto);
+			                                 EmployeeDto dto = mapper.map(entity,EmployeeDto.class);
+			                                 dtoList.add(dto);
 		                                      });
 		 return dtoList;
 			 
 		    /*
 			 * List<EmployeeDto> dtoList = entitylist.stream() .map(entity->{
-			 *                                                               EmployeeDto dto = new EmployeeDto();
-			 *                                                               BeanUtils.copyProperties(entity, dto); 
-			 *                                                               return dto;
+			 *                                                            EmployeeDto dto = mapper.map(entity,EmployeeDto.class);
+			 *                                                            return dto;
 			 *                                                              }).collect(Collectors.toList()); 
-			 *                                                              return dtoList;
+			 * return dtoList;
 			 */
 		 
 	}
