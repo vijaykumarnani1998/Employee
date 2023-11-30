@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.employee.entity.EmployeeEntity;
+import com.employee.exception.EmployeeNotFoundException;
 import com.employee.repository.EmployeeRepository;
 import com.employee.service.EmployeeService;
 
@@ -31,39 +32,39 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Override
 	public EmployeeEntity getOneEmployeeById(Integer id) {
 		
-		 Optional<EmployeeEntity> optEmployee = employeeRepository.findById(id);
-		 EmployeeEntity employeeEntity = optEmployee.get();
-		 return employeeEntity;
+	EmployeeEntity employeeEntity = employeeRepository.findById(id)
+			                                          .orElseThrow(()->new EmployeeNotFoundException("Employee Not Exists"));
+	 return employeeEntity;
 	}
 
 	@Override
 	public List<EmployeeEntity> deleteEmployeeById(Integer id) {
-		
-		 Optional<EmployeeEntity> optEmployee = employeeRepository.findById(id);
-		 if(optEmployee.isPresent())
-		 {
+		EmployeeEntity employeeEntity = employeeRepository.findById(id).orElseThrow(()->new EmployeeNotFoundException("Employee Not Exists"));
+		if(employeeEntity!=null)
+		{
 		employeeRepository.deleteById(id); 
 		return getAllEmployees() ;
-		 }
-		 else
-		 {
-			 return null;
-		 }
-		
+		}
+		else
+		{
+			return null;
+		}
 	}
 
 	@Override
 	public EmployeeEntity updateEmployee(EmployeeEntity employee) {
+		//findById(user.getId()).get();
 		Integer id = employee.getId();
-		 Optional<EmployeeEntity> optEmployee = employeeRepository.findById(id);
-		 if(optEmployee.isPresent())
-		 {
+		Optional<EmployeeEntity> employeeEntity = employeeRepository.findById(id);
+		
+		if(employeeEntity.isPresent())
+		{
 		return employeeRepository.save(employee);
-		 }
-		 else
-		 {
-			 return null;
-		 }
+		}
+		else {
+			throw new  EmployeeNotFoundException("Employee Not Exists");
+
+		}
 	}
 
 }

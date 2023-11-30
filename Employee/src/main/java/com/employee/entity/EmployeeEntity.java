@@ -30,6 +30,7 @@ public class EmployeeEntity {
 	private String email;
 	
 	@Column(name = "mobile_number")
+	
 	private String mobileNumber;
 	
 }

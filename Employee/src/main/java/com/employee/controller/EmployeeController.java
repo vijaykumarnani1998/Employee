@@ -3,6 +3,8 @@ package com.employee.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,35 +15,65 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.employee.entity.EmployeeEntity;
+import com.employee.exception.EmployeeNotFoundException;
 import com.employee.service.EmployeeService;
 
 @RestController
 @RequestMapping("/employee")
 public class EmployeeController {
 
-    @Autowired
-	private EmployeeService employeeService;
-
+   @Autowired
+	private  EmployeeService employeeService;
+	
 	@PostMapping("/employee")
-	public EmployeeEntity createEmployee(@RequestBody EmployeeEntity employee) {
-		return this.employeeService.saveEmployee(employee);
+	public ResponseEntity<EmployeeEntity> createEmployee( @RequestBody EmployeeEntity employee)
+    {
+		EmployeeEntity employee1 = employeeService.saveEmployee(employee);
+		return new ResponseEntity<EmployeeEntity>(employee1 ,HttpStatus.ACCEPTED);
+
+		
 	}
 
 	@GetMapping("/employee/all")
-	public List<EmployeeEntity> getAllEmployees() {
-		return employeeService.getAllEmployees();
+	public ResponseEntity<List<EmployeeEntity>> getAllEmployees()
+	{
+		
+		List<EmployeeEntity> list = employeeService.getAllEmployees();
+		return new ResponseEntity<List<EmployeeEntity>>(list ,HttpStatus.ACCEPTED);
 	}
+	@GetMapping("/employee/{id}")
+	public ResponseEntity<?>  getOneEmployee(@PathVariable Integer id)
+	{
+		
+		try {
+			 EmployeeEntity employee = employeeService.getOneEmployeeById(id);
+			return new ResponseEntity<EmployeeEntity>(employee ,HttpStatus.ACCEPTED);
 
+		} catch (EmployeeNotFoundException e) {
+			return new ResponseEntity<String>( e.getMessage(),HttpStatus.BAD_REQUEST);
+		}
+	}
+	
 	@DeleteMapping("/employee/{id}")
-	public List<EmployeeEntity> deleteEmployeeById(@PathVariable Integer id) {
-		employeeService.deleteEmployeeById(id);
-		return employeeService.getAllEmployees();
+	public ResponseEntity<?> deleteEmployeeById(@PathVariable Integer id)
+	{
+		
+		try {
+			employeeService.deleteEmployeeById(id);
+			List<EmployeeEntity> list = employeeService.getAllEmployees();
+			return new ResponseEntity<List<EmployeeEntity>>(list ,HttpStatus.ACCEPTED);
+		} catch (EmployeeNotFoundException e) {
+			
+			return new ResponseEntity<String>( e.getMessage(),HttpStatus.BAD_REQUEST);
+			//If we use Global Exception Handler,then we can use "throw e" instead of above line
+		}
 	}
-
+	
 	@PutMapping("/update")
-	public EmployeeEntity updateEmployee(@RequestBody EmployeeEntity employeeEntity) {
-
-		return employeeService.updateEmployee(employeeEntity);
+	public ResponseEntity<EmployeeEntity>   updateEmployee( @RequestBody EmployeeEntity employee) {
+		
+		EmployeeEntity employee1 = employeeService.saveEmployee(employee);
+		return new ResponseEntity<EmployeeEntity>(employee1 ,HttpStatus.ACCEPTED);
 }
 	
 	
